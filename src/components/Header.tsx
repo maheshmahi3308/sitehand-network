@@ -1,7 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { Construction, Menu } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -26,12 +31,32 @@ const Header = () => {
         </nav>
 
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" className="hidden md:inline-flex">
-            Log In
-          </Button>
-          <Button variant="hero" size="sm">
-            Get Started
-          </Button>
+          {user ? (
+            <Button 
+              variant="hero" 
+              size="sm"
+              onClick={() => navigate('/dashboard')}
+            >
+              Dashboard
+            </Button>
+          ) : (
+            <>
+              <Button 
+                variant="ghost" 
+                className="hidden md:inline-flex"
+                onClick={() => navigate('/auth')}
+              >
+                Log In
+              </Button>
+              <Button 
+                variant="hero" 
+                size="sm"
+                onClick={() => navigate('/auth')}
+              >
+                Get Started
+              </Button>
+            </>
+          )}
           <Button variant="ghost" size="icon" className="md:hidden">
             <Menu className="h-5 w-5" />
           </Button>
