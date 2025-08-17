@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -10,8 +11,23 @@ import {
   Clock,
   Shield
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 
 const UserTypes = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const handleUserTypeClick = (role: string) => {
+    if (user) {
+      // If user is already logged in, go to dashboard
+      navigate('/dashboard');
+    } else {
+      // If not logged in, go to auth page with role context
+      navigate('/auth', { state: { role } });
+    }
+  };
+
   const userTypes = [
     {
       title: "Workers",
@@ -25,7 +41,8 @@ const UserTypes = () => {
         { icon: Shield, text: "Verified credentials" }
       ],
       buttonText: "Find Work",
-      buttonVariant: "hero" as const
+      buttonVariant: "hero" as const,
+      role: "worker"
     },
     {
       title: "Project Owners",
@@ -39,7 +56,8 @@ const UserTypes = () => {
         { icon: Shield, text: "Secure escrow payments" }
       ],
       buttonText: "Post Project",
-      buttonVariant: "construction" as const
+      buttonVariant: "construction" as const,
+      role: "owner"
     },
     {
       title: "Material Suppliers",
@@ -53,7 +71,8 @@ const UserTypes = () => {
         { icon: Shield, text: "Quality assurance" }
       ],
       buttonText: "List Materials",
-      buttonVariant: "secondary" as const
+      buttonVariant: "secondary" as const,
+      role: "supplier"
     }
   ];
 
@@ -99,6 +118,7 @@ const UserTypes = () => {
                 <Button 
                   variant={type.buttonVariant} 
                   className="w-full mt-6 group"
+                  onClick={() => handleUserTypeClick(type.role)}
                 >
                   {type.buttonText}
                   <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
